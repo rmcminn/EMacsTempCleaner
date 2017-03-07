@@ -1,0 +1,122 @@
+#!/bin/bash
+#title           :EMacs Temp Cleaner (emtc)
+#description     :Tool for managing Emacs temp files.
+#author		 :Ryder McMinn
+#date            :20170307
+#version         :0.1    
+#usage		 :bash emtc
+#bash_version    :GNU bash, version 4.4.12(1)-release
+#==============================================================================
+
+# Globals
+PATH=/home/$USER
+
+#######################################
+# Shows help menu (-h | --help)
+# Globals:
+#   none
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+help () {
+    echo "emtc"
+    echo "EMacs Temp Cleaner - Tool for managing Emacs temp files."
+    echo " "
+    echo "emtc [options]"
+    echo " "
+    echo "options:"
+    echo "-h, --help     show this menu"
+    echo "-l, --list     list temp files in /home/$USER"
+    echo "-r, --remove   removes all temp files in /home/$USER"
+    echo "-ri            provides interactive prompt for removal"
+    echo " "
+}
+
+#####################################################
+# Lists temp files found in /home/$USER (-l | --list)
+# Globals:
+#   PATH
+# Arguments:
+#   None
+# Returns:
+#   None
+#####################################################
+list () {
+    /bin/find $PATH -name "*.*~" -print0 | while IFS= read -r -d '' file
+    do
+	echo $file
+    done
+}
+
+##############################################
+# Removes all emacs temp files (-r | --remove)
+# Globals:
+#   PATH
+# Arguments:
+#   None
+# Returns:
+#   None
+#############################################
+remove () {
+    /bin/find $PATH -name "*.*~" -print0 | while IFS= read -r -d '' file
+    do
+	/bin/rm $file
+    done
+}
+
+#############################################################
+# Removes all emacs temp files with prompt for each one (-ri)
+# Globals:
+#   PATH
+#   REPLY
+# Arguments:
+#   None
+# Returns:
+#   None
+#############################################################
+remove_interactive () {
+    /bin/find $PATH -name "*.*~" -print0 | while IFS= read -r -d '' file
+    do
+	read -r -p "Delete $file (y or N)? " -n1 </dev/tty
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+	    /bin/rm $file
+	    echo " "
+	    echo "$file deleted."
+	fi
+	echo " "
+    done
+}
+
+
+if [ $# -eq 0 ]; # Shows Help Menu when no options are provided
+then
+    help
+    exit 0
+else
+    
+    # Flags
+    while [ ! $# -eq 0 ]
+    do
+	case "$1" in
+	    --help | -h) #help
+		help
+		exit 0
+		;;
+	    --list | -l) #list
+		list
+		exit
+		;;
+	    --remove | -r) #remove
+		remove
+		exit
+		;;
+	    -ri) #remove_interactive
+	        remove_interactive
+		;;
+	esac
+	shift
+    done
+fi
