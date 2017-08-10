@@ -3,7 +3,7 @@
 #description     :Tool for managing Emacs temp files.
 #author		 :Ryder McMinn
 #date            :20170307
-#version         :0.1    
+#version         :0.2
 #usage		 :bash emtc
 #bash_version    :GNU bash, version 4.4.12(1)-release
 #==============================================================================
@@ -63,6 +63,8 @@ remove () {
     /bin/find $PATH -name "*.*~" -print0 | while IFS= read -r -d '' file
     do
 	/bin/rm $file
+	echo " "
+	echo "$file deleted."
     done
 }
 
@@ -96,7 +98,7 @@ then
     help
     exit 0
 else
-    
+
     # Flags
     while [ ! $# -eq 0 ]
     do
