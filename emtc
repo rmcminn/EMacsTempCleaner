@@ -63,7 +63,6 @@ remove () {
     /bin/find $PATH -name "*.*~" -print0 | while IFS= read -r -d '' file
     do
 	/bin/rm $file
-	echo " "
 	echo "$file deleted."
     done
 }
